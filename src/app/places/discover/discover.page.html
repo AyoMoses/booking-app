@@ -21,6 +21,17 @@
           <ion-card-content>
             <p>{{ loadedPlaces[0].description }}</p>
           </ion-card-content>
+          <div class="ion-text-right">
+            <!-- routerDirection is ionic based nad tells the browser ch animation to play forward or backward -->
+            <ion-button fill="clear" color="primary" [routerLink]="[
+              '/', 
+              'places', 
+              'tabs', 
+              'discover', 
+              loadedPlaces[0].id]">
+              More
+            </ion-button>
+          </div>
         </ion-card>
       </ion-col>
     </ion-row>
@@ -30,7 +41,8 @@
       <ion-col size="12" size-sm="6" offset-sm="2" class="ion-text-center">
         <ion-list>
           <!-- we output all places except featured by using slice to start from index 1 after the first element -->
-          <ion-item *ngFor="let place of loadedPlaces.slice(1)">
+          <ion-item *ngFor="let place of loadedPlaces.slice(1)"
+            [routerLink]="['/', 'places', 'tabs', 'discover', place.id]" detail>
             <ion-thumbnail slot="start">
               <ion-img [src]="place.imageUrl"></ion-img>
             </ion-thumbnail>
