@@ -23,6 +23,7 @@ export class OfferBookingsPage implements OnInit {
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
       // If we do not have a matching place ID then we navigate back to offers
+      // THE BELOW EXTRACTS ID OF LOADED PLACE
       if (!paramMap.has('placeId')) {
         this.NavCtrl.navigateBack('/places/tabs/offers');
         // ADD RETURN SO OTHER CODE DOES NOT GET EXECUTED
