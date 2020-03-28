@@ -19,7 +19,7 @@ export class PlacesService {
       'p2',
       'Mansion in Abuja',
       'Facade in Abuja, Gwarimpa.',
-      'src/assets/facade.jpg',
+      '/assets/facade.jpg',
       15000
     ),
     new Place(
@@ -41,7 +41,7 @@ export class PlacesService {
       'Mansion in San Fracisco',
       'Not your average city trip!',
       '/assets/san-francisco.jpg',
-      189.99
+      30000
     ),
   ];
 
