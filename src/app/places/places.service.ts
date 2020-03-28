@@ -38,11 +38,11 @@ export class PlacesService {
     ),
     new Place(
       'p5',
-      'Mansion in San Fracisco',
-      'Not your average city trip!',
+      'Luxury apartment in Lagos',
+      'Not your average city neighborhood in Ikoyi!',
       '/assets/san-francisco.jpg',
       30000
-    ),
+    )
   ];
 
   get places() {
@@ -50,4 +50,9 @@ export class PlacesService {
   }
 
   constructor() {}
+
+  getPlace(id: string) {
+    // GET THE PLACE ID AND CLONE THE ENTIRE OBJECT BY USING SPREAD OPERATOR SO WE CAN PULL OUT ALL THE PROPERTIES OF THE OBJECTS RETRIVED
+    return { ...this._places.find(p => p.id === id) };
+  }
 }
