@@ -16,7 +16,7 @@ export class OfferBookingsPage implements OnInit {
   // WE ADD A PRIAVTE OF OUR OWN NAME route
   constructor(
     private route: ActivatedRoute,
-    private NavCtrl: NavController,
+    private navCtrl: NavController,
     private placesService: PlacesService
   ) {}
 
@@ -25,7 +25,7 @@ export class OfferBookingsPage implements OnInit {
       // If we do not have a matching place ID then we navigate back to offers
       // THE BELOW EXTRACTS ID OF LOADED PLACE
       if (!paramMap.has('placeId')) {
-        this.NavCtrl.navigateBack('/places/tabs/offers');
+        this.navCtrl.navigateBack('/places/tabs/offers');
         // ADD RETURN SO OTHER CODE DOES NOT GET EXECUTED
         return;
       }
