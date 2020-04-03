@@ -11,6 +11,13 @@
 </ion-header>
 
 <ion-content>
+
+  <!-- ION-SEGMENT ALLOWS TO ADD SEGMENTED BUTTONS WHERE ONLY ONE CAN BE ACTIVE AT A TIME -->
+  <ion-segment (ionChange)="onFilterUpdate($event)" value="all">
+    <ion-segment-button value="all">All Places</ion-segment-button>
+    <ion-segment-button value="bookable">Bookable Places</ion-segment-button>
+  </ion-segment>
+
   <ion-grid>
 
     <!-- FEATURED PLACE -->
@@ -45,6 +52,7 @@
     <!-- OTHER CARDS -->
     <ion-row>
       <ion-col size="12" size-sm="6" offset-sm="2" class="ion-text-center">
+        <!-- check the browser to inspect the height of an item to enable the scrolling -->
         <ion-virtual-scroll [items]="listedLoadedPlaces" approxItemHeight="72px">
           <!-- we output all places except featured by using slice to start from index 1 after the first element -->
           <!-- *ngFor="let place of loadedPlaces.slice(1)" -->
