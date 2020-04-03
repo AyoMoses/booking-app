@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NavController, ModalController } from '@ionic/angular';
+import {
+  NavController,
+  ModalController,
+  ActionSheetController
+} from '@ionic/angular';
 
 import { PlacesService } from '../../places.service';
 import { Place } from '../../place.model';
@@ -19,7 +23,8 @@ export class PlaceDetailPage implements OnInit {
     private navCtrl: NavController,
     private placesService: PlacesService,
     private route: ActivatedRoute,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private actionSheetCtrl: ActionSheetController
   ) {}
 
   ngOnInit() {
@@ -42,6 +47,37 @@ export class PlaceDetailPage implements OnInit {
     // navigate using the this.navCrtl which will then pop the last screen on the page
     // this.navCrtl.pop();
 
+    // ACTION SHEET ADDED
+    this.actionSheetCtrl.create({
+      header: 'Choose an Action',
+      buttons: [
+        {
+          text: 'Select Date',
+          handler: () => {
+            this.openBookingMOdal('select');
+          }
+        },
+        {
+          text: 'Random Date',
+          handler: () => {
+            this.openBookingMOdal('random');
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        }
+      ]
+    })
+    .then(actionSheetEl => {
+      actionSheetEl.present();
+    });
+  }
+
+  // OPEN THE MODAL THRU THE MODAL CONTROLLER
+  // TS style. Mode has to be a string but not just any - exactly select or random
+  openBookingMOdal(mode: 'select' | 'random') {
+    console.log(mode);
     // WE USE A MODAL THIS WAY. The create method takes the component which the modal will be used in as object
     this.modalCtrl
       .create({
