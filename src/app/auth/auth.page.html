@@ -6,6 +6,19 @@
 
 <ion-content>
 
+  <ion-list>
+    <ion-item>
+      <ion-label position="floating">Email</ion-label>
+      <ion-input></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <!-- LOAD SPINNER IF isLoading is true -->
+  <!-- <div class="ion-text-center">
+    <ion-spinner color="primary" *ngIf="isLoading"></ion-spinner>
+  </div> -->
+
+  <!-- *ngIf="!isLoading" is added to button -->
   <ion-button class="ion-margin" color="primary" (click)="onLogin()">
     Login
   </ion-button>
