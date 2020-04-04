@@ -25,7 +25,7 @@
       <ion-col size="12" size-sm="6" offset-sm="2" class="ion-text-center">
         <ion-card>
           <ion-card-header>
-            <ion-card-title>{{ loadedPlaces[0].title }}</ion-card-title>
+            <ion-card-title class="card-title">{{ loadedPlaces[0].title }}</ion-card-title>
             <ion-card-subtitle>{{ loadedPlaces[0].price | currency:'NGN':'symbol-narrow' }} / Night</ion-card-subtitle>
           </ion-card-header>
 
@@ -66,7 +66,7 @@
               <ion-img [src]="place.imageUrl"></ion-img>
             </ion-thumbnail>
 
-            <ion-label>
+            <ion-label class="my-label-test">
               <h2>{{ place.title }}</h2>
               <p>{{ place.description }}</p>
             </ion-label>

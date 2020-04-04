@@ -1,0 +1,6 @@
+ion-button {
+
+    --box-shadow: 3px 5px 5px 0 rgb(var(--ion-color-primary-rgb), .5);
+
+    // ALSO USE rgba(0,0,0,0.4) for example but this approach has limited compatibility
+}
