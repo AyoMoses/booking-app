@@ -2,13 +2,52 @@
   <ion-toolbar>
 
     <ion-buttons slot="start">
-      <ion-back-button [routerLink]="['/', 'places', 'tabs', 'offers']"></ion-back-button>
+      <ion-back-button [defaultHref]="['/places/tabs/offers' + place.id]"></ion-back-button>
     </ion-buttons>
 
     <ion-title>Edit Offer</ion-title>
+
+    <ion-buttons slot="primary">
+      <!-- DISBABLE BUTTON IF FORM VALIDATION IS FALSE -->
+      <ion-button (click)="onUpdateOffer()" [disabled]="!form.valid">
+        <ion-icon name="checkmark-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+
+  <form [formGroup]="form">
+
+    <ion-grid>
+
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-item>
+            <ion-label position="floating">Title</ion-label>
+            <ion-input type="text" autocomplete autocorrect formControlName="title"></ion-input>
+            <!-- WE BIND THE FORMS KEY NAME TO THE FORM TEMPLATE WITH FORMCONTROLNAME -->
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-item>
+            <ion-label position="floating">Short Description</ion-label>
+            <ion-textarea rows="3" formControlName="description"></ion-textarea>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      
+      <!-- SHOW ERROR MESSAGE REACTIVELY -->
+      <ion-row *ngIf="!form.get('description').valid && form.get('description').touched">
+        <p>Description must between 1 and 180 characters.</p>
+      </ion-row>
+
+    </ion-grid>
+  </form>
 
 </ion-content>

@@ -40,6 +40,7 @@
           </ion-item>
         </ion-col>
       </ion-row>
+      
       <!-- SHOW ERROR MESSAGE REACTIVELY -->
       <ion-row *ngIf="!form.get('description').valid && form.get('description').touched">
         <p>Description must between 1 and 180 characters.</p>
