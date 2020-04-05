@@ -5,8 +5,10 @@
     </ion-buttons>
     <ion-title>New Offer</ion-title>
 
+    <!-- ADD NEW OFFER BUTTON -->
     <ion-buttons slot="primary">
-      <ion-button (click)="onCreateOffers()">
+      <!-- DISBABLE BUTTON IF FORM VALIDATION IS FALSE -->
+      <ion-button (click)="onCreateOffers()" [disabled]="!form.valid">
         <ion-icon name="checkmark-outline" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -15,50 +17,59 @@
 </ion-header>
 
 <ion-content>
-  <ion-grid>
+  <!-- we bind the origramatically created forms to as [formGroup] then pointing to the property -->
+  <form [formGroup]="form">
 
-    <ion-row>
-      <ion-col size-sm="6" offset-sm="3">
-        <ion-item>
-          <ion-label position="floating">Title</ion-label>
-          <ion-input type="text" autocomplete autocorrect></ion-input>
-        </ion-item>
-      </ion-col>
-    </ion-row>
+    <ion-grid>
 
-    <ion-row>
-      <ion-col size-sm="6" offset-sm="3">
-        <ion-item>
-          <ion-label position="floating">Short Description</ion-label>
-          <ion-textarea rows="3"></ion-textarea>
-        </ion-item>
-      </ion-col>
-    </ion-row>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-item>
+            <ion-label position="floating">Title</ion-label>
+            <ion-input type="text" autocomplete autocorrect formControlName="title"></ion-input> 
+            <!-- WE BIND THE FORMS KEY NAME TO THE FORM TEMPLATE WITH FORMCONTROLNAME -->
+          </ion-item>
+        </ion-col>
+      </ion-row>
 
-    <ion-row>
-      <ion-col size-sm="6" offset-sm="3">
-        <ion-item>
-          <ion-label position="floating">Price</ion-label>
-          <ion-input type="number"></ion-input>
-        </ion-item>
-      </ion-col>
-    </ion-row>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-item>
+            <ion-label position="floating">Short Description</ion-label>
+            <ion-textarea rows="3" formControlName="description"></ion-textarea>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <!-- SHOW ERROR MESSAGE REACTIVELY -->
+      <ion-row *ngIf="!form.get('description').valid && form.get('description').touched">
+        <p>Description must between 1 and 180 characters.</p>
+      </ion-row>
 
-    <ion-row>
-      <ion-col size-sm="3" offset-sm="3">
-        <ion-item>
-          <ion-label position="floating">Available from</ion-label>
-          <ion-datetime min="2020-04-01" max="2020-12-31"></ion-datetime>
-        </ion-item>
-      </ion-col>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-item>
+            <ion-label position="floating">Price</ion-label>
+            <ion-input type="number" formControlName="price"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
 
-      <ion-col size-sm="3" offset-sm="3">
-        <ion-item>
-          <ion-label position="floating">Available to</ion-label>
-          <ion-datetime min="2020-04-02" max="2020-12-31"></ion-datetime>
-        </ion-item>
-      </ion-col>
-    </ion-row>
+      <ion-row>
+        <ion-col size-sm="3" offset-sm="3">
+          <ion-item>
+            <ion-label position="floating">Available from</ion-label>
+            <ion-datetime min="2020-04-01" max="2020-12-31" formControlName="dateFrom"></ion-datetime>
+          </ion-item>
+        </ion-col>
 
-  </ion-grid>
+        <ion-col size-sm="3" offset-sm="3">
+          <ion-item>
+            <ion-label position="floating">Available to</ion-label>
+            <ion-datetime min="2020-04-02" max="2020-12-31" formControlName="dateTo"></ion-datetime>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+    </ion-grid>
+  </form>
 </ion-content>
