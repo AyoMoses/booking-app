@@ -12,4 +12,7 @@ export class NewOfferPage implements OnInit {
   ngOnInit() {
   }
 
+  onCreateOffers() {
+    console.log('creating offered place...');
+  }
 }
