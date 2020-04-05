@@ -6,47 +6,79 @@
 
 <ion-content class="ion-padding">
 
-  <ion-grid>
-    <ion-row>
-      <ion-col size-sm="6" offset-sm="3">
+  <!-- WE ADD NGFORM TO GET ACCESS TO THE FORM ANGULAR CREATED FOR US -->
+  <form #f="ngForm" (ngSubmit)="onSubmit(f)">
 
-        <ion-list>
-          <ion-item>
-            <ion-label position="floating">Email</ion-label>
-            <ion-input type="text"></ion-input>
-          </ion-item>
-      
-          <ion-item>
-            <ion-label position="floating">Password</ion-label>
-            <ion-input type="password"></ion-input>
-          </ion-item>
-        </ion-list>
+    <ion-grid>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
 
-      </ion-col>
-    </ion-row>
+          <ion-list>
+            <ion-item>
+              <ion-label position="floating">Email</ion-label>
+              <ion-input 
+                type="email" 
+                ngModel 
+                name="email" 
+                required 
+                email
+                #emailCtrl="ngModel"></ion-input>
+                <!-- ngModel give us access to the form control angular created for us -->
+              </ion-item>
+              
+              <ion-item *ngIf="!emailCtrl.valid && emailCtrl.touched" lines="none">
+                <ion-label>Please enter a valid email address.</ion-label>
+              </ion-item>
 
-    <ion-row>
+            <ion-item>
+              <ion-label position="floating">Password</ion-label>
+              <ion-input 
+                type="password" 
+                ngModel 
+                name="password" 
+                required 
+                minlength="6"
+                #passwordCtrl="ngModel"></ion-input>
+            </ion-item>
 
-      <ion-col size-sm="6" offset-sm="3">
+            <ion-item *ngIf="!passwordCtrl.valid && passwordCtrl.touched" lines="none">
+              <ion-label>More than 6 characters required.</ion-label>
+            </ion-item>
+          </ion-list>
 
-        <ion-button class="login-page-btn" expand="block" fill="clear">Switch to Login</ion-button>
-      
-        <!-- LOAD SPINNER IF isLoading is true -->
-        <!-- <div class="ion-text-center">
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+
+        <ion-col size-sm="6" offset-sm="3">
+
+          <ion-button type="button" class="login-page-btn" expand="block" fill="clear">Switch to Login</ion-button>
+
+          <!-- LOAD SPINNER IF isLoading is true -->
+          <!-- <div class="ion-text-center">
           <ion-spinner color="primary" *ngIf="isLoading"></ion-spinner>
         </div> -->
-      
-        <!-- *ngIf="!isLoading" is added to button -->
-        <ion-button expand="block" class="ion-margin sign-up-btn" (click)="onLogin()">
-          Login
-        </ion-button>
 
-      </ion-col>
+          <!-- *ngIf="!isLoading" is added to button -->
+          <ion-button 
+            type="submit" 
+            expand="block" 
+            class="ion-margin sign-up-btn" 
+            (click)="onLogin()"
+            [disabled]="!f.valid"
+          >
+            Login
+          </ion-button>
+
+        </ion-col>
 
 
-    </ion-row>
+      </ion-row>
 
-  </ion-grid>
+    </ion-grid>
+
+  </form>
 
 
 
