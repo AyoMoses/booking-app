@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Authenticate</ion-title>
+    <ion-title>{{ isLogin ? 'Log in' : 'Sign up' }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -53,7 +53,7 @@
 
         <ion-col size-sm="6" offset-sm="3">
 
-          <ion-button type="button" class="login-page-btn" expand="block" fill="clear">Switch to Login</ion-button>
+          <ion-button type="button" class="login-page-btn" expand="block" fill="clear" (click)="onSwitchAuthMode()">Switch to {{ isLogin ? 'Sign up' : 'Log in' }}</ion-button>
 
           <!-- LOAD SPINNER IF isLoading is true -->
           <!-- <div class="ion-text-center">

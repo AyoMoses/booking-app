@@ -12,7 +12,7 @@
 
   --ion-color-secondary: #5feffb;
   --ion-color-secondary-rgb: 95, 239, 251;
-  --ion-color-secondary-contrast: #000000;
+  --ion-color-secondary-contrast: #ffffff;
   --ion-color-secondary-contrast-rgb: 0, 0, 0;
   --ion-color-secondary-shade: #54d2dd;
   --ion-color-secondary-tint: #6ff1fb;
@@ -70,6 +70,8 @@
   --ion-toolbar-background:  var(--ion-color-primary);
   --ion-toolbar-color: var(--ion-color-primary-contrast);
 }
+
+// font-color #0B0014
 
 // SELECT COMPONENT TO STYLE you can also style an ionic component in its own component or page scss file to scope it there
 // ion-button {
