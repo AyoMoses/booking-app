@@ -13,35 +13,45 @@ export class PlacesService {
       'Boat house in Lagos',
       'House beside the beach, Takwa Bay',
       '/assets/boat-house.jpg',
-      8000
+      8000,
+      new Date('2020-01-01'),
+      new Date('2020-12-31')
     ),
     new Place(
       'p2',
       'Mansion in Abuja',
       'Facade in Abuja, Gwarimpa.',
       '/assets/facade.jpg',
-      15000
+      15000,
+      new Date('2020-01-01'),
+      new Date('2020-12-31')
     ),
     new Place(
       'p3',
       'Mansion in Lagos',
       'House in Lekki with a helipad',
       '/assets/mansion.jpg',
-      16000
+      16000,
+      new Date('2020-01-01'),
+      new Date('2020-12-31')
     ),
     new Place(
       'p4',
       'Mansion in Ibadan',
       'The city with brown roof tops and unique culture of amala',
       '/assets/palace.jpg',
-      13000
+      13000,
+      new Date('2020-01-01'),
+      new Date('2020-12-31')
     ),
     new Place(
       'p5',
       'Luxury apartment in Lagos',
       'Not your average city neighborhood in Ikoyi!',
       '/assets/san-francisco.jpg',
-      30000
+      30000,
+      new Date('2020-01-01'),
+      new Date('2020-12-31')
     )
   ];
 
