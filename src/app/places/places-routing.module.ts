@@ -15,22 +15,22 @@ const routes: Routes = [
             path: '',
             loadChildren: () =>
               import('./discover/discover.module').then(
-                m => m.DiscoverPageModule
-              )
+                (m) => m.DiscoverPageModule
+              ),
           },
           {
             path: ':placeId',
             loadChildren: () =>
               import('./discover/place-detail/place-detail.module').then(
-                m => m.PlaceDetailPageModule
-              )
+                (m) => m.PlaceDetailPageModule
+              ),
           },
           {
             path: '',
             redirectTo: 'places/tabs/discover',
-            pathMatch: 'full'
-          }
-        ]
+            pathMatch: 'full',
+          },
+        ],
       },
       {
         path: 'offers',
@@ -38,35 +38,44 @@ const routes: Routes = [
           {
             path: '',
             loadChildren: () =>
-              import('./offers/offers.module').then(m => m.OffersPageModule)
+              import('./offers/offers.module').then((m) => m.OffersPageModule),
           },
           {
             path: 'new-offer',
-            loadChildren: () => import('./offers/new-offer/new-offer.module').then( m => m.NewOfferPageModule)
+            loadChildren: () =>
+              import('./offers/new-offer/new-offer.module').then(
+                (m) => m.NewOfferPageModule
+              ),
           },
           {
             path: 'edit/:placeId',
-            loadChildren: () => import('./offers/edit-offer/edit-offer.module').then( m => m.EditOfferPageModule)
+            loadChildren: () =>
+              import('./offers/edit-offer/edit-offer.module').then(
+                (m) => m.EditOfferPageModule
+              ),
           },
           {
             path: ':placeId',
-            loadChildren: () => import('./offers/offer-bookings/offer-bookings.module').then(m => m.OfferBookingsPageModule)
+            loadChildren: () =>
+              import('./offers/offer-bookings/offer-bookings.module').then(
+                (m) => m.OfferBookingsPageModule
+              ),
           },
-        ]
-      }
-    ]
+        ],
+      },
+    ],
   },
   {
     path: '',
     redirectTo: '/places/tabs/discover',
-    pathMatch: 'full'
-  }
+    pathMatch: 'full',
+  },
 ];
 
 // hard coded routes first before dynamic routes
 // remember that tab name id in html must be the same as the route path and route with :productId is a dynamic param
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class PlacesPageRoutingModule {}
