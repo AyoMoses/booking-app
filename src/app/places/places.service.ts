@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { take, map } from 'rxjs/operators';
 
 import { Place } from './place.model';
 import { AuthService } from '../auth/auth.service';
@@ -7,8 +9,10 @@ import { AuthService } from '../auth/auth.service';
   providedIn: 'root',
 })
 export class PlacesService {
+  // tslint:disable-next-line: variable-name. Behaviour subject is a construct imported from rxjs
+  // we create a new behaviour subject that starts with our list of places
   // tslint:disable-next-line: variable-name
-  private _places: Place[] = [
+  private _places = new BehaviorSubject<Place[]>([
     new Place(
       'p1',
       'Boat house in Lagos',
@@ -59,17 +63,26 @@ export class PlacesService {
       new Date('2020-12-31'),
       'abc'
     ),
-  ];
+  ]);
 
+  // get places() {
+  //   return [...this._places];
+  // }
+
+  // with the addition of rxjs, places is no longer an array but a subject
   get places() {
-    return [...this._places];
+    return this._places.asObservable();
   }
 
   constructor(private authService: AuthService) {}
 
   getPlace(id: string) {
-    // GET THE PLACE ID AND CLONE THE ENTIRE OBJECT BY USING SPREAD OPERATOR SO WE CAN PULL OUT ALL THE PROPERTIES OF THE OBJECTS RETRIVED
-    return { ...this._places.find((p) => p.id === id) };
+    return this.places.pipe(
+      take(1),
+      map((places) => {
+        return { ...places.find((p) => p.id === id) };
+      })
+    );
   }
 
   // what we call when we add a new place by adding a constructor to make a new one
@@ -90,6 +103,8 @@ export class PlacesService {
       dateTo,
       this.authService.userId
     );
-    this._places.push(newPlace);
+    this.places.pipe(take(1)).subscribe((places) => {
+      this._places.next(places.concat(newPlace));
+    });
   }
 }
