@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { LoadingController } from '@ionic/angular';
 
 import { PlacesService } from '../../places.service';
 
@@ -13,7 +14,11 @@ export class NewOfferPage implements OnInit {
   // create form property
   form: FormGroup;
 
-  constructor(private placesService: PlacesService, private router: Router) {}
+  constructor(
+    private placesService: PlacesService,
+    private router: Router,
+    private loadingCtrl: LoadingController
+  ) {}
 
   ngOnInit() {
     // we add controls of what we intend to control in out forms
@@ -46,16 +51,27 @@ export class NewOfferPage implements OnInit {
     if (!this.form.valid) {
       return;
     }
-    // all values here are string thus we add + to convert it to a number
-    this.placesService.addPlace(
-      this.form.value.title,
-      this.form.value.description,
-      +this.form.value.price,
-      new Date(this.form.value.dateFrom),
-      new Date(this.form.value.dateTo)
-    );
-    // after adding new input and goes to pageXOffset, we reset
-    this.form.reset();
-    this.router.navigate(['/places/tabs/offers']);
+    this.loadingCtrl
+      .create({
+        message: 'Creating place...',
+      })
+      .then((loadingEl) => {
+        loadingEl.present();
+        // all values here are string thus we add + to convert it to a number
+        this.placesService
+          .addPlace(
+            this.form.value.title,
+            this.form.value.description,
+            +this.form.value.price,
+            new Date(this.form.value.dateFrom),
+            new Date(this.form.value.dateTo)
+          )
+          .subscribe(() => {
+            loadingEl.dismiss();
+            // after adding new input and goes to pageXOffset, we reset
+            this.form.reset();
+            this.router.navigate(['/places/tabs/offers']);
+          });
+      });
   }
 }
