@@ -24,7 +24,7 @@
       </ion-col>
     </ion-row>
 
-    <ion-row>
+    <ion-row *ngIf="isBookable">
       <ion-col class="ion-text-center">
         
         <ion-button (click)="onBookPlace()" color="primary" class="ion-margin">Book</ion-button>

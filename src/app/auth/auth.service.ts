@@ -8,7 +8,7 @@ export class AuthService {
   private _userIsAuthenticated = true;
   // store our userId here too
   // tslint:disable-next-line: variable-name
-  private _userId = 'abc';
+  private _userId = 'xyz';
 
   get userIsAuthenticated() {
     return this._userIsAuthenticated;

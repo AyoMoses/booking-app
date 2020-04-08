@@ -7,6 +7,7 @@ import {
   LoadingController,
 } from '@ionic/angular';
 import { Subscription } from 'rxjs';
+import { AuthService } from '../../../auth/auth.service';
 
 import { BookingsService } from '../../../bookings/bookings.service';
 import { PlacesService } from '../../places.service';
@@ -20,6 +21,7 @@ import { CreateBookingComponent } from '../../../bookings/create-booking/create-
 })
 export class PlaceDetailPage implements OnInit, OnDestroy {
   place: Place;
+  isBookable: boolean;
   private placeSub: Subscription;
   // WE INJECT NAV CONTROLLER TO HELP AID PROPER PAGE TRANSITION
   constructor(
@@ -30,7 +32,8 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
     private modalCtrl: ModalController,
     private actionSheetCtrl: ActionSheetController,
     private bookingService: BookingsService,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -42,8 +45,9 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
       this.placeSub = this.placesService
         .getPlace(paramMap.get('placeId'))
         .subscribe((place) => {
-          this.place = place;
           // this first place is the property place and the second is the place gotten as an arguement in the subscribe method
+          this.place = place;
+          this.isBookable = place.userId !== this.authService.userId;
         });
     });
   }
