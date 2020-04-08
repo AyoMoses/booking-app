@@ -104,7 +104,7 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
       .then((resultData) => {
         if (resultData.role === 'confirm') {
           this.loadingCtrl
-            .create({ message: 'Booking place...Please hold' })
+            .create({ message: 'Booking place...' })
             .then((loadingEl) => {
               loadingEl.present();
               const data = resultData.data.bookingData;
