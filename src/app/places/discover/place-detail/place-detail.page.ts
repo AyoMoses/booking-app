@@ -1,12 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   NavController,
   ModalController,
   ActionSheetController,
+  LoadingController,
 } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
+import { BookingsService } from '../../../bookings/bookings.service';
 import { PlacesService } from '../../places.service';
 import { Place } from '../../place.model';
 import { CreateBookingComponent } from '../../../bookings/create-booking/create-booking.component';
@@ -21,12 +23,14 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
   private placeSub: Subscription;
   // WE INJECT NAV CONTROLLER TO HELP AID PROPER PAGE TRANSITION
   constructor(
-    // private router: Router,
+    private router: Router,
     private navCtrl: NavController,
     private placesService: PlacesService,
     private route: ActivatedRoute,
     private modalCtrl: ModalController,
-    private actionSheetCtrl: ActionSheetController
+    private actionSheetCtrl: ActionSheetController,
+    private bookingService: BookingsService,
+    private loadingCtrl: LoadingController
   ) {}
 
   ngOnInit() {
@@ -35,10 +39,12 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
         this.navCtrl.navigateBack('/places/tabs/offers');
         return;
       }
-      this.placeSub = this.placesService.getPlace(paramMap.get('placeId')).subscribe(place => {
-        this.place = place;
-        // this first place is the property place and the second is the place gotten as an arguement in the subscribe method
-      });
+      this.placeSub = this.placesService
+        .getPlace(paramMap.get('placeId'))
+        .subscribe((place) => {
+          this.place = place;
+          // this first place is the property place and the second is the place gotten as an arguement in the subscribe method
+        });
     });
   }
 
@@ -96,9 +102,26 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
         return modalEl.onDidDismiss();
       })
       .then((resultData) => {
-        console.log(resultData.data, resultData.role);
         if (resultData.role === 'confirm') {
-          console.log('BOOKED!');
+          this.loadingCtrl
+            .create({ message: 'Booking place...Please hold' })
+            .then((loadingEl) => {
+              loadingEl.present();
+              const data = resultData.data.bookingData;
+              this.bookingService.addBooking(
+                this.place.id,
+                this.place.title,
+                this.place.imageUrl,
+                data.firstName,
+                data.lastName,
+                data.guestNumber,
+                data.startDate,
+                data.endDate
+              ).subscribe(() => {
+                loadingEl.dismiss();
+                this.router.navigate(['/bookings']);
+              });
+            });
         }
       });
   }
