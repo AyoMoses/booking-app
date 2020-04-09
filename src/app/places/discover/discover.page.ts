@@ -17,6 +17,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
   // below is displaying our list dynamically when we use slice() to output from the first list
   listedLoadedPlaces: Place[];
   relevantPlaces: Place[];
+  isLoading = false; // to show a spinner
   private placesSub: Subscription;
 
   constructor(
@@ -29,6 +30,14 @@ export class DiscoverPage implements OnInit, OnDestroy {
       this.loadedPlaces = places;
       this.relevantPlaces = this.loadedPlaces;
       this.listedLoadedPlaces = this.relevantPlaces.slice(1);
+    });
+  }
+
+  // to fetch our places gotten from the API
+  ionViewWillEnter() {
+    this.isLoading = true;
+    this.placesService.fetchPlaces().subscribe(() => {
+      this.isLoading = false;
     });
   }
 
