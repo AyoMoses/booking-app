@@ -20,12 +20,30 @@
   <ion-grid>
     <ion-row>
       <ion-col size="12" size-sm="6" offset-sm="2">
-        <ion-list>
+
+        <!-- ADD ION SPINNER IF WE ARE LOADING AN OFFER AND LOADING IS TRUE -->
+        <div *ngIf="isLoading" class="ion-text-center">
+          <ion-spinner color="primary"></ion-spinner>
+        </div>
+
+        <!-- OTHERWISE.. SHOW THIS IF WE ARE NOT LAODING AND NEED TO FETCH COS THERE'S NON -->
+        <div class="ion-text-center" *ngIf="!isLoading && loadedOffers.length <= 0">
+
+          <p class="no-offers-error">
+            Offers not found! Please create a new one!
+          </p>
+
+          <ion-button routerLink="/places/tabs/offers/new-offer" color="primary">Offer new place</ion-button>
+
+        </div>
+
+        <!-- ONLY SHOW THIS WHEN WE ARE NOT LOADING OR FOUND NEW OFFERS -->
+        <ion-list *ngIf="!isLoading && loadedOffers.length > 0">
           <!-- ADDING ION-ITEM-SLIDING -->
           <ion-item-sliding *ngFor="let offer of loadedOffers" #slidingItem>
 
             <!-- the below refers to the injected offer of place model -->
-           <app-offer-item [offer]="offer"></app-offer-item>
+            <app-offer-item [offer]="offer"></app-offer-item>
 
             <ion-item-options>
               <ion-item-option color="secondary" (click)="onEdit(offer.id, slidingItem)">

@@ -14,6 +14,10 @@ import { PlacesService } from '../places.service';
 export class OffersPage implements OnInit, OnDestroy {
   // load the place-model
   loadedOffers: Place[];
+
+  // loading property
+  isLoading = false;
+
   // to avoid memory being full
   private placesSub: Subscription;
 
@@ -24,6 +28,14 @@ export class OffersPage implements OnInit, OnDestroy {
    this.placesService.places.subscribe(places => {
      this.loadedOffers = places;
    });
+  }
+
+  // LOAD OFFERS WHEN VIEW BECOMES ACTIVE
+  ionViewWillEnter() {
+    this.isLoading = true;
+    this.placesService.fetchPlaces().subscribe(() => {
+      this.isLoading = false;
+    });
   }
 
   // IMPORT SLIDING ITEM AND CLOSE WHEN CLICKED THEN NAVIGATING TO EDIT BY GETTING THE OFFER ID
