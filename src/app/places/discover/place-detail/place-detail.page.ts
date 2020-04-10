@@ -5,6 +5,7 @@ import {
   ModalController,
   ActionSheetController,
   LoadingController,
+  AlertController,
 } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../../auth/auth.service';
@@ -21,6 +22,7 @@ import { CreateBookingComponent } from '../../../bookings/create-booking/create-
 })
 export class PlaceDetailPage implements OnInit, OnDestroy {
   place: Place;
+  isLoading = false;
   isBookable: boolean;
   private placeSub: Subscription;
   // WE INJECT NAV CONTROLLER TO HELP AID PROPER PAGE TRANSITION
@@ -33,7 +35,8 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
     private actionSheetCtrl: ActionSheetController,
     private bookingService: BookingsService,
     private loadingCtrl: LoadingController,
-    private authService: AuthService
+    private authService: AuthService,
+    private alertCtrl: AlertController
   ) {}
 
   ngOnInit() {
@@ -42,13 +45,36 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
         this.navCtrl.navigateBack('/places/tabs/offers');
         return;
       }
+      // WE START FETCHING OUR PLACE THEN WE SET IS LOADING TO TRUE
+      this.isLoading = true;
       this.placeSub = this.placesService
         .getPlace(paramMap.get('placeId'))
-        .subscribe((place) => {
-          // this first place is the property place and the second is the place gotten as an arguement in the subscribe method
-          this.place = place;
-          this.isBookable = place.userId !== this.authService.userId;
-        });
+        .subscribe(
+          (place) => {
+            // this first place is the property place and the second is the place gotten as an arguement in the subscribe method
+            this.place = place;
+            this.isBookable = place.userId !== this.authService.userId;
+            // ONCE WE ARE DONE this.isLoading, WE SET this.isLoading TO FALSE
+            this.isLoading = false;
+
+            // ADD ERROR object HANDLING ONCE PLACES ARE NOT GOTTEN sent by the serve. We then inject alert controller
+          },
+          (error) => {
+            this.alertCtrl.create({
+              header: 'An error occured',
+              message: 'could not load place.',
+              buttons: [
+                {
+                  text: 'Okay',
+                  handler: () => {
+                    this.router.navigate(['/places/tabs/discover']);
+                  },
+                },
+              ],
+              // THE WE CALL ALERT TO SHOW OUR ALERT ELEMENT IF ERROR IS GOTTEN
+            }).then(alertEl => alertEl.present());
+          }
+        );
     });
   }
 
@@ -112,19 +138,21 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
             .then((loadingEl) => {
               loadingEl.present();
               const data = resultData.data.bookingData;
-              this.bookingService.addBooking(
-                this.place.id,
-                this.place.title,
-                this.place.imageUrl,
-                data.firstName,
-                data.lastName,
-                data.guestNumber,
-                data.startDate,
-                data.endDate
-              ).subscribe(() => {
-                loadingEl.dismiss();
-                this.router.navigate(['/bookings']);
-              });
+              this.bookingService
+                .addBooking(
+                  this.place.id,
+                  this.place.title,
+                  this.place.imageUrl,
+                  data.firstName,
+                  data.lastName,
+                  data.guestNumber,
+                  data.startDate,
+                  data.endDate
+                )
+                .subscribe(() => {
+                  loadingEl.dismiss();
+                  this.router.navigate(['/bookings']);
+                });
             });
         }
       });
