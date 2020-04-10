@@ -73,14 +73,22 @@ export class BookingsService {
       );
   }
 
+  // CACNEL BOOKING BY DELETING on the server
   cancelBooking(bookingId: string) {
-    return this.bookings.pipe(
-      take(1),
-      delay(1000),
-      tap((bookings) => {
-        this._bookings.next(bookings.filter((b) => b.id !== bookingId));
-      })
-    );
+    return this.http
+      .delete(
+        `https://ionic-booking-app-bf454.firebaseio.com/bookings/${bookingId}.json`
+      )
+      .pipe(
+        switchMap(() => {
+          return this.bookings;
+        }),
+        // TAKE 1 snapshot IS ADDED TO PREVENT AN INIFINTE LOOP
+        take(1),
+        tap((bookings) => {
+          this._bookings.next(bookings.filter((b) => b.id !== bookingId));
+        })
+      );
   }
 
   // FETCH BOOKINGS IF WE RELOAD THE BOOKINGS PAGE. This tells firebase to order results by userId
