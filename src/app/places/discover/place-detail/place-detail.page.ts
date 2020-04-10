@@ -131,6 +131,7 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
         // onDidDismiss returns a promise. we add an event listner to know which modal button was clicked from below statements
         return modalEl.onDidDismiss();
       })
+      // LOGIC BELOW CALLS THA ADD BOOKING SPINNER
       .then((resultData) => {
         if (resultData.role === 'confirm') {
           this.loadingCtrl
