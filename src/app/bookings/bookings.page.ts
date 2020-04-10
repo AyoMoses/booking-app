@@ -13,6 +13,7 @@ import { Booking } from './booking.model';
 export class BookingsPage implements OnInit, OnDestroy {
   // this imports the booking model
   loadedBookings: Booking[];
+  isLoading = false;
   private bookingSub: Subscription;
 
   constructor(private bookingsService: BookingsService, private loadingCtrl: LoadingController) { }
@@ -21,6 +22,14 @@ export class BookingsPage implements OnInit, OnDestroy {
     // this imports the dummy bookings
     this.bookingSub = this.bookingsService.bookings.subscribe(bookings => {
       this.loadedBookings = bookings;
+    });
+  }
+
+  // FETCH THE BOOKINGS
+  ionViewWillEnter() {
+    this.isLoading = true;
+    this.bookingsService.fetchBookings().subscribe(() => {
+      this.isLoading = false;
     });
   }
 
