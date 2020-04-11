@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 import { map, switchMap } from 'rxjs/operators';
@@ -15,6 +15,9 @@ import { PlaceLocation } from '../../../places/location.model';
   styleUrls: ['./location-picker.component.scss'],
 })
 export class LocationPickerComponent implements OnInit {
+  // we use @Output to make locationPick become a listenable event. Listen to from outside
+  // tslint:disable-next-line: new-parens
+  @Output() locationPick = new EventEmitter<PlaceLocation>();
   selectedLocationImage: string;
   isLoading: boolean;
 
@@ -51,6 +54,7 @@ export class LocationPickerComponent implements OnInit {
             this.selectedLocationImage = staticMapImageUrl;
             // LOADING IS FALSE ONCE WE GET OUR IMAGE
             this.isLoading = false;
+            this.locationPick.emit(pickedLocation);
           });
       });
       modalEl.present();
