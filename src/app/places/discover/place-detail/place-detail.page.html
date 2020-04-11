@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/places/tabs/discover"></ion-back-button>
     </ion-buttons>
-    
+
     <!-- IF WE ARE LOADING SHOW LOADING TEXT IF WE ARE NOT SHOW PLACE TITLE -->
     <ion-title>{{ isLoading ? 'Loading...' : place.title }}</ion-title>
   </ion-toolbar>
@@ -27,14 +27,25 @@
 
 
     <ion-row>
-      <ion-col size-sm="6" offset-sm="3" class="ion-text-center ion-padding">
+      <ion-col size-sm="6" offset-sm="3" class="ion-text-center ion-padding location-description">
         <p>{{ place.description }}</p>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size-sm="6" offset-sm="3" class="ion-padding ion-text-center">
+        <p class="location-address">{{ place.location.address }}</p>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size-sm="6" offset-sm="3" class="ion-padding">
+        <ion-img class="location-image" [src]="place.location.staticMapImageUrl"></ion-img>
       </ion-col>
     </ion-row>
 
     <ion-row *ngIf="isBookable">
       <ion-col class="ion-text-center">
-        
+
         <ion-button (click)="onBookPlace()" color="primary" class="ion-margin">Book</ion-button>
 
       </ion-col>

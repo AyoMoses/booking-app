@@ -1,0 +1,22 @@
+.location-description {
+    color: var(--ion-color-primary);
+    font-weight: 500;
+}
+
+.location-address {
+    color: var(--ion-color-medium);
+}
+
+.location-image {
+    width: 100%;
+    border: 2px solid var(--ion-color-primary);
+    height: 25rem;
+    max-height: 30vh;
+    object-fit: cover;
+    box-shadow: 2px 6px 5px 0 rgb(var(--ion-color-medium-rgb), .5);
+    
+}
+
+p {
+    margin: 0;
+}
