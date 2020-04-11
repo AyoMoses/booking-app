@@ -4,7 +4,13 @@
 
   <!-- show location image preview -->
   <!-- we only show the preview IF the image only exist -->
-  <ion-img class="location-image" [src]="selectedLocationImage" *ngIf="selectedLocationImage && !isLoading"></ion-img>
+  <ion-img 
+    class="location-image" 
+    [src]="selectedLocationImage" 
+    *ngIf="selectedLocationImage && !isLoading"
+    role="button"
+    (click)="onPickLocation()"
+  ></ion-img>
 
   <ion-button color="primary" (click)="onPickLocation()" *ngIf="!selectedLocationImage && !isLoading">
     <ion-icon name="map-outline" slot="start"></ion-icon>
