@@ -57,7 +57,7 @@ export class BookingsService {
     // ADD RETURN IN FRONT OF THE NEW OBSERVABLE CHAIN GOTTEN FROM API
     return this.http
       .post<{ name: string }>(
-        'https://ionic-booking-app-bf454.firebaseio.com/bookings.json',
+        'https://ambient-mystery-273815.firebaseio.com/bookings.json',
         { ...newBooking, id: null }
       )
       .pipe(
@@ -77,7 +77,7 @@ export class BookingsService {
   cancelBooking(bookingId: string) {
     return this.http
       .delete(
-        `https://ionic-booking-app-bf454.firebaseio.com/bookings/${bookingId}.json`
+        `https://ambient-mystery-273815.firebaseio.com/bookings/${bookingId}.json`
       )
       .pipe(
         switchMap(() => {
@@ -96,7 +96,7 @@ export class BookingsService {
   fetchBookings() {
     return this.http
       .get<{ [key: string]: BookingData }>(
-        `https://ionic-booking-app-bf454.firebaseio.com/bookings.json?orderBy="userId"&equalTo="${this.authService.userId}"`
+        `https://ambient-mystery-273815.firebaseio.com/bookings.json?orderBy="userId"&equalTo="${this.authService.userId}"`
       )
       .pipe(
         map((bookingData) => {

@@ -96,7 +96,7 @@ export class PlacesService {
       this.http
         // WE GET BACK VARIOUS KEYS WHERE WE DON'T KNOW THE NAME WHERE EACH KEY WILL HOLD PALCE DATA IN THE END
         .get<{ [key: string]: PlaceData }>(
-          'https://ionic-booking-app-bf454.firebaseio.com/offered-places.json'
+          'https://ambient-mystery-273815.firebaseio.com/offered-places.json'
         )
         .pipe(
           map((resData) => {
@@ -130,7 +130,7 @@ export class PlacesService {
   getPlace(id: string) {
     return this.http
       .get<PlaceData>(
-        `https://ionic-booking-app-bf454.firebaseio.com/offered-places/${id}.json`
+        `https://ambient-mystery-273815.firebaseio.com/offered-places/${id}.json`
       )
       .pipe(
         map((placeData) => {
@@ -171,7 +171,7 @@ export class PlacesService {
     // WE POST AN HTTP REQUEST AND CAN USE OUR FOLDER TO SAVE ON THE DATABASE TOO i.e offered-places
     return this.http
       .post<{ name: string }>(
-        'https://ionic-booking-app-bf454.firebaseio.com/offered-places.json',
+        'https://ambient-mystery-273815.firebaseio.com/offered-places.json',
         { ...newPlace, id: null }
       )
       .pipe(
@@ -221,7 +221,7 @@ export class PlacesService {
         );
         // put means to replace from the API
         return this.http.put(
-          `https://ionic-booking-app-bf454.firebaseio.com/offered-places/${placeId}.json`,
+          `https://ambient-mystery-273815.firebaseio.com/offered-places/${placeId}.json`,
           { ...updatedPlaces[updatedPlaceIndex], id: null }
         );
       }),
