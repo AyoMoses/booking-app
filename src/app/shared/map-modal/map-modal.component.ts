@@ -6,6 +6,7 @@ import {
   ElementRef,
   Renderer2,
   OnDestroy,
+  Input,
 } from '@angular/core';
 
 import { ModalController } from '@ionic/angular';
@@ -23,11 +24,20 @@ export class MapModalComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('map', { static: true }) mapElementRef: ElementRef<HTMLDivElement>;
 
-  // STORE THE BELOW IN A GLOBAL VARIABLE
+  // ADDING A BINDABLE PROPERTY THAT CAN ENABLE US USE OUR MAP CENTER FROM OUTSIDE
+  @Input() center = { lat: 6.618132, lng: 3.429364 };
+  @Input() selectable = true; // THIS SIMPLY MEANS CAN WE SELECT A PLACE to determine if we have that click listener or not
+  @Input() closeButtonText = 'Cancel';
+  @Input() title = 'Pick Location';
+
+  // STORE THE BELOW IN A GLOBAL PROPERTY
   clickListener: any;
   googleMaps: any;
 
-  constructor(private modalCtrl: ModalController, private renderer: Renderer2) {}
+  constructor(
+    private modalCtrl: ModalController,
+    private renderer: Renderer2
+  ) {}
 
   ngOnInit() {}
 
@@ -39,7 +49,7 @@ export class MapModalComponent implements OnInit, AfterViewInit, OnDestroy {
         const mapEl = this.mapElementRef.nativeElement;
         // tslint:disable-next-line: no-shadowed-variable
         const map = new googleMaps.Map(mapEl, {
-          center: { lat: 6.618132, lng: 3.429364 },
+          center: this.center,
           zoom: 16,
         });
 
@@ -48,14 +58,23 @@ export class MapModalComponent implements OnInit, AfterViewInit, OnDestroy {
           this.renderer.addClass(mapEl, 'visible');
         });
 
-        // ADD EVENT LISTENER ON THE MAP
-        this.clickListener = map.addListener('click', event => {
-          const selectedCoords = {
-            lat: event.latLng.lat(),
-            lng: event.latLng.lng()
-          };
-          this.modalCtrl.dismiss(selectedCoords);
-        });
+        // ADD EVENT LISTENER ON THE MAP and enebale only if selectable is true and add no marker
+        if (this.selectable) {
+          this.clickListener = map.addListener('click', (event) => {
+            const selectedCoords = {
+              lat: event.latLng.lat(),
+              lng: event.latLng.lng(),
+            };
+            this.modalCtrl.dismiss(selectedCoords);
+          });
+        } else { // if its not selectable we add no listner but a marker
+          const marker = new googleMaps.Marker({
+            position: this.center, // put the marker on our picked location
+            map, // short for map: map
+            title: 'Picked Location'
+          });
+          marker.setMap(map);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -68,8 +87,11 @@ export class MapModalComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // this ensure when we dismiss the modal and clear the map, we actually get rid of click listener
   // so we do not introduce a memory leak
+  // remove if click listener is set and remove
   ngOnDestroy() {
-    this.googleMaps.event.removeListener(this.clickListener);
+    if (this.clickListener) {
+      this.googleMaps.event.removeListener(this.clickListener);
+    }
   }
 
   // GOOGLE MAPS SDK
@@ -82,7 +104,8 @@ export class MapModalComponent implements OnInit, AfterViewInit, OnDestroy {
     return new Promise((resolve, reject) => {
       const script = document.createElement('script');
       script.src =
-        'https://maps.googleapis.com/maps/api/js?key=' + environment.googleMapsAPIKey;
+        'https://maps.googleapis.com/maps/api/js?key=' +
+        environment.googleMapsAPIKey;
       script.async = true;
       script.defer = true;
       document.body.appendChild(script);

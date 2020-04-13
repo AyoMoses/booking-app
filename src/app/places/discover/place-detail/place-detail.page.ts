@@ -14,6 +14,7 @@ import { BookingsService } from '../../../bookings/bookings.service';
 import { PlacesService } from '../../places.service';
 import { Place } from '../../place.model';
 import { CreateBookingComponent } from '../../../bookings/create-booking/create-booking.component';
+import { MapModalComponent } from '../../../shared/map-modal/map-modal.component';
 
 @Component({
   selector: 'app-place-detail',
@@ -60,19 +61,21 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
             // ADD ERROR object HANDLING ONCE PLACES ARE NOT GOTTEN sent by the serve. We then inject alert controller
           },
           (error) => {
-            this.alertCtrl.create({
-              header: 'An error occured',
-              message: 'could not load place.',
-              buttons: [
-                {
-                  text: 'Okay',
-                  handler: () => {
-                    this.router.navigate(['/places/tabs/discover']);
+            this.alertCtrl
+              .create({
+                header: 'An error occured',
+                message: 'could not load place.',
+                buttons: [
+                  {
+                    text: 'Okay',
+                    handler: () => {
+                      this.router.navigate(['/places/tabs/discover']);
+                    },
                   },
-                },
-              ],
-              // THE WE CALL ALERT TO SHOW OUR ALERT ELEMENT IF ERROR IS GOTTEN
-            }).then(alertEl => alertEl.present());
+                ],
+                // THE WE CALL ALERT TO SHOW OUR ALERT ELEMENT IF ERROR IS GOTTEN
+              })
+              .then((alertEl) => alertEl.present());
           }
         );
     });
@@ -156,6 +159,26 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
                 });
             });
         }
+      });
+  }
+
+  // BIND ALL OUR THE PROPERTIES CREATED IN MAPMODAL
+  onShowFullMap() {
+    this.modalCtrl
+      .create({
+        component: MapModalComponent,
+        componentProps: {
+          center: {
+            lat: this.place.location.lat,
+            lng: this.place.location.lng,
+          },
+          selectable: false,
+          closeButtonText: 'Close',
+          title: this.place.location.address,
+        },
+      })
+      .then((modalEl) => {
+        modalEl.present();
       });
   }
 
