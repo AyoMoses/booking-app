@@ -1,0 +1,13 @@
+{
+  "appId": "io.ionic.starter",
+  "appName": "booking-app",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www",
+  "cordova": {},
+  "linuxAndroidStudioPath": "/home/ayodeji/android-studio/bin/studio.sh",
+  "server": {
+    "url": "http://192.168.0.166:8100",
+    "cleartext": true
+  }
+}
