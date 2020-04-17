@@ -42,35 +42,41 @@ export class BookingsService {
     dateTo: Date
   ) {
     let generatedId: string;
-    const newBooking = new Booking(
-      Math.random().toString(),
-      placeId,
-      this.authService.userId,
-      placeTitle,
-      placeImage,
-      firstName,
-      lastName,
-      guestNumber,
-      dateFrom,
-      dateTo
+    let newBooking: Booking;
+    return this.authService.userId.pipe(
+      take(1),
+      switchMap((userId) => {
+        if (!userId) {
+          throw new Error('No user id found!');
+        }
+        newBooking = new Booking(
+          Math.random().toString(),
+          placeId,
+          userId,
+          placeTitle,
+          placeImage,
+          firstName,
+          lastName,
+          guestNumber,
+          dateFrom,
+          dateTo
+        );
+        // ADD RETURN IN FRONT OF THE NEW OBSERVABLE CHAIN GOTTEN FROM API
+        return this.http.post<{ name: string }>(
+          'https://ambient-mystery-273815.firebaseio.com/bookings.json',
+          { ...newBooking, id: null }
+        );
+      }),
+      switchMap((resData) => {
+        generatedId = resData.name;
+        return this.bookings;
+      }),
+      take(1),
+      tap((bookings) => {
+        newBooking.id = generatedId;
+        this._bookings.next(bookings.concat(newBooking));
+      })
     );
-    // ADD RETURN IN FRONT OF THE NEW OBSERVABLE CHAIN GOTTEN FROM API
-    return this.http
-      .post<{ name: string }>(
-        'https://ambient-mystery-273815.firebaseio.com/bookings.json',
-        { ...newBooking, id: null }
-      )
-      .pipe(
-        switchMap((resData) => {
-          generatedId = resData.name;
-          return this.bookings;
-        }),
-        take(1),
-        tap((bookings) => {
-          newBooking.id = generatedId;
-          this._bookings.next(bookings.concat(newBooking));
-        })
-      );
   }
 
   // CACNEL BOOKING BY DELETING on the server
@@ -94,36 +100,41 @@ export class BookingsService {
   // FETCH BOOKINGS IF WE RELOAD THE BOOKINGS PAGE. This tells firebase to order results by userId
   // FETCH USER ID BY CURRENTLY LOGGED IN USER
   fetchBookings() {
-    return this.http
-      .get<{ [key: string]: BookingData }>(
-        `https://ambient-mystery-273815.firebaseio.com/bookings.json?orderBy="userId"&equalTo="${this.authService.userId}"`
-      )
-      .pipe(
-        map((bookingData) => {
-          const bookings = [];
-          for (const key in bookingData) {
-            if (bookingData.hasOwnProperty(key)) {
-              bookings.push(
-                new Booking(
-                  key,
-                  bookingData[key].placeId,
-                  bookingData[key].userId,
-                  bookingData[key].placeTitle,
-                  bookingData[key].placeImage,
-                  bookingData[key].firstName,
-                  bookingData[key].lastName,
-                  bookingData[key].guestNumber,
-                  new Date(bookingData[key].bookedFrom),
-                  new Date(bookingData[key].bookedTo)
-                )
-              );
-            }
+    return this.authService.userId.pipe(
+      take(1),
+      switchMap((userId) => {
+        if (!userId) {
+          throw new Error('User not found!');
+        }
+        return this.http.get<{ [key: string]: BookingData }>(
+          `https://ambient-mystery-273815.firebaseio.com/bookings.json?orderBy="userId"&equalTo="${userId}"`
+        );
+      }),
+      map((bookingData) => {
+        const bookings = [];
+        for (const key in bookingData) {
+          if (bookingData.hasOwnProperty(key)) {
+            bookings.push(
+              new Booking(
+                key,
+                bookingData[key].placeId,
+                bookingData[key].userId,
+                bookingData[key].placeTitle,
+                bookingData[key].placeImage,
+                bookingData[key].firstName,
+                bookingData[key].lastName,
+                bookingData[key].guestNumber,
+                new Date(bookingData[key].bookedFrom),
+                new Date(bookingData[key].bookedTo)
+              )
+            );
           }
-          return bookings;
-        }),
-        tap((bookings) => {
-          this._bookings.next(bookings);
-        })
-      );
+        }
+        return bookings;
+      }),
+      tap((bookings) => {
+        this._bookings.next(bookings);
+      })
+    );
   }
 }

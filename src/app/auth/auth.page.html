@@ -65,10 +65,9 @@
             type="submit" 
             expand="block" 
             class="ion-margin sign-up-btn" 
-            (click)="onLogin()"
             [disabled]="!f.valid"
           >
-            Login
+            {{ isLogin ? 'Log in' : 'Sign up' }}
           </ion-button>
 
         </ion-col>

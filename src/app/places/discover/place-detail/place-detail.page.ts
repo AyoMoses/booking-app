@@ -9,6 +9,7 @@ import {
 } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../../auth/auth.service';
+import { switchMap, take } from 'rxjs/operators';
 
 import { BookingsService } from '../../../bookings/bookings.service';
 import { PlacesService } from '../../places.service';
@@ -48,13 +49,23 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
       }
       // WE START FETCHING OUR PLACE THEN WE SET IS LOADING TO TRUE
       this.isLoading = true;
-      this.placeSub = this.placesService
-        .getPlace(paramMap.get('placeId'))
+      let fetchUserId: string;
+      this.authService.userId
+        .pipe(
+          take(1),
+          switchMap((userId) => {
+            if (!userId) {
+              throw new Error('Found no user!');
+            }
+            fetchUserId = userId;
+            return this.placesService.getPlace(paramMap.get('placeId'));
+          })
+        )
         .subscribe(
           (place) => {
             // this first place is the property place and the second is the place gotten as an arguement in the subscribe method
             this.place = place;
-            this.isBookable = place.userId !== this.authService.userId;
+            this.isBookable = place.userId !== fetchUserId;
             // ONCE WE ARE DONE this.isLoading, WE SET this.isLoading TO FALSE
             this.isLoading = false;
 

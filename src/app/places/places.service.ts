@@ -164,34 +164,41 @@ export class PlacesService {
   ) {
     // RANDOM GENERATED ID
     let generatedId: string;
-    const newPlace = new Place(
-      Math.random().toString(),
-      title,
-      description,
-      '/assets/boat-house.jpg',
-      price,
-      dateFrom,
-      dateTo,
-      this.authService.userId,
-      location
+    let newPlace: Place;
+    return this.authService.userId.pipe(
+      take(1),
+      switchMap((userId) => {
+        if (!userId) {
+          throw new Error('No user found!');
+        }
+
+        newPlace = new Place(
+          Math.random().toString(),
+          title,
+          description,
+          '/assets/boat-house.jpg',
+          price,
+          dateFrom,
+          dateTo,
+          userId,
+          location
+        );
+        // WE POST AN HTTP REQUEST AND CAN USE OUR FOLDER TO SAVE ON THE DATABASE TOO i.e offered-places
+        return this.http.post<{ name: string }>(
+          'https://ambient-mystery-273815.firebaseio.com/offered-places.json',
+          { ...newPlace, id: null }
+        );
+      }),
+      switchMap((resData) => {
+        generatedId = resData.name;
+        return this.places;
+      }),
+      take(1),
+      tap((places) => {
+        newPlace.id = generatedId;
+        this._places.next(places.concat(newPlace));
+      })
     );
-    // WE POST AN HTTP REQUEST AND CAN USE OUR FOLDER TO SAVE ON THE DATABASE TOO i.e offered-places
-    return this.http
-      .post<{ name: string }>(
-        'https://ambient-mystery-273815.firebaseio.com/offered-places.json',
-        { ...newPlace, id: null }
-      )
-      .pipe(
-        switchMap((resData) => {
-          generatedId = resData.name;
-          return this.places;
-        }),
-        take(1),
-        tap((places) => {
-          newPlace.id = generatedId;
-          this._places.next(places.concat(newPlace));
-        })
-      );
     // return this.places.pipe(
     //   take(1),
     //   delay(1000),
@@ -212,7 +219,7 @@ export class PlacesService {
           return of(places);
         }
       }),
-      switchMap(places => {
+      switchMap((places) => {
         const updatedPlaceIndex = places.findIndex((pl) => pl.id === placeId);
         updatedPlaces = [...places];
         const oldPlace = updatedPlaces[updatedPlaceIndex];
