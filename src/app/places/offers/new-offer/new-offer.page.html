@@ -81,6 +81,16 @@
         </ion-col>
       </ion-row>
 
+      <!-- IMAGE PICKER -->
+      <ion-row>
+        <ion-col size-sm="3" offset-sm="3">
+
+          <!-- on location pick then forward the event data gotten -->
+          <app-image-picker (imagePick)="onImagePicked($event)"></app-image-picker>
+
+        </ion-col>
+      </ion-row> 
+
     </ion-grid>
   </form>
 </ion-content>
